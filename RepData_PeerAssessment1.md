@@ -60,11 +60,7 @@ dailysteps <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TRU
 names(dailysteps) <- c("Date", "steps")
 
 #Make a histogram of the total number of steps taken each day
-qplot(steps, data = dailysteps, geom="histogram", xlab = "Daily Number of Steps")
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+qplot(steps, data = dailysteps, geom="histogram", xlab = "Daily Number of Steps", binwidth = 300)
 ```
 
 ![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-2-1.png) 
@@ -141,11 +137,7 @@ activity <- rbind(activity, nstps)
 dailysteps2 <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TRUE)
 names(dailysteps2) <- c("Date", "steps")
 
-qplot(steps, data = dailysteps2, geom="histogram", xlab = "Daily Number of Steps")
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+qplot(steps, data = dailysteps2, geom="histogram", xlab = "Daily Number of Steps", binwidth = 300)
 ```
 
 ![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-4-1.png) 
@@ -157,7 +149,8 @@ median.steps2 <- median(dailysteps2$steps)
 
 There are 2304 intervals with NA
 
-THe new mean number of steps is 9504 this is close to the mean from the data with NAs of 9354.  THe new median number of steps is 10395 this is the same as the median from the data with NAs of 10395. There is little impact to the estimated number of steps a day from using the median for the time interval.  I had previously used the mean but this introduced a sizeable difference.
+THe new mean number of steps is 9504 this is close to the mean from the data with NAs of 9354.  THe new median number of steps is 10395 this is the same as the median from the data with NAs of 10395.  There is little impact to the estimated number of steps a day from using the median for the time interval to replace the missing data.  I had previously used the mean but this introduced a sizeable difference.
+
 
 #Are there differences in activity patterns between weekdays and weekends?
 
@@ -184,9 +177,9 @@ intsteps2$mean.steps <- round(intsteps2$mean.steps)
 intsteps2$median.steps <- round(intsteps2$median.steps)
 
 
-ggplot(intsteps2, aes(x = interval, y = mean.steps))  + geom_line() + facet_grid(weekday~.)
+ggplot(intsteps2, aes(x = interval, y = mean.steps)) + ylab("Number of Steps") + geom_line() + facet_grid(weekday~.)
 ```
 
 ![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-5-1.png) 
 
-
+As can be seen from the plots above the user appears to start walking around later at weekends (maybe they sleep later). Once they are awake they tend to take more steps and to be walking around (awake?) later in the day.

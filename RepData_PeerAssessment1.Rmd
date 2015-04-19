@@ -66,7 +66,7 @@ dailysteps <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TRU
 names(dailysteps) <- c("Date", "steps")
 
 #Make a histogram of the total number of steps taken each day
-qplot(steps, data = dailysteps, geom="histogram", xlab = "Daily Number of Steps")
+qplot(steps, data = dailysteps, geom="histogram", xlab = "Daily Number of Steps", binwidth = 300)
 
 #Calculate and report the mean and median of the total number of steps taken per day
 mean.steps <- mean(dailysteps$steps) 
@@ -135,7 +135,7 @@ activity <- rbind(activity, nstps)
 dailysteps2 <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TRUE)
 names(dailysteps2) <- c("Date", "steps")
 
-qplot(steps, data = dailysteps2, geom="histogram", xlab = "Daily Number of Steps")
+qplot(steps, data = dailysteps2, geom="histogram", xlab = "Daily Number of Steps", binwidth = 300)
 
 mean.steps2 <- mean(dailysteps2$steps) # 
 median.steps2 <- median(dailysteps2$steps)
@@ -145,7 +145,8 @@ median.steps2 <- median(dailysteps2$steps)
 
 There are `r num.NAs` intervals with NA
 
-THe new mean number of steps is `r format(round(mean.steps2), scientific=FALSE)` this is close to the mean from the data with NAs of `r format(round(mean.steps), scientific=FALSE)`.  THe new median number of steps is `r format(round(median.steps2), scientific=FALSE)` this is the same as the median from the data with NAs of `r format(round(median.steps), scientific=FALSE)`. There is little impact to the estimated number of steps a day from using the median for the time interval.  I had previously used the mean but this introduced a sizeable difference.
+THe new mean number of steps is `r format(round(mean.steps2), scientific=FALSE)` this is close to the mean from the data with NAs of `r format(round(mean.steps), scientific=FALSE)`.  THe new median number of steps is `r format(round(median.steps2), scientific=FALSE)` this is the same as the median from the data with NAs of `r format(round(median.steps), scientific=FALSE)`.  There is little impact to the estimated number of steps a day from using the median for the time interval to replace the missing data.  I had previously used the mean but this introduced a sizeable difference.
+
 
 #Are there differences in activity patterns between weekdays and weekends?
 
@@ -172,8 +173,8 @@ intsteps2$mean.steps <- round(intsteps2$mean.steps)
 intsteps2$median.steps <- round(intsteps2$median.steps)
 
 
-ggplot(intsteps2, aes(x = interval, y = mean.steps))  + geom_line() + facet_grid(weekday~.)
+ggplot(intsteps2, aes(x = interval, y = mean.steps)) + ylab("Number of Steps") + geom_line() + facet_grid(weekday~.)
 
 ```
 
-
+As can be seen from the plots above the user appears to start walking around later at weekends (maybe they sleep later). Once they are awake they tend to take more steps and to be walking around (awake?) later in the day.
