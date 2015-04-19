@@ -1,11 +1,6 @@
----
-title: "Reproducible Data - Assignment 1 - Activity Tracker"
-author: "Stephen Dragoni"
-date: "Wednesday, April 15, 2015"
-output:
-  html_document:
-    keep_md: yes
----
+# Reproducible Data - Assignment 1 - Activity Tracker
+Stephen Dragoni  
+Wednesday, April 15, 2015  
 # Assignment
 
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
@@ -36,15 +31,14 @@ Process the data into a format suitable for analysis
  
 
 
-```{r}
+
+```r
 library(plyr)
 library(ggplot2)
 
 
 activity <- read.csv("activity.csv") # read in the data
 activity$date <- as.POSIXct(activity$date) # set the dates to POSIXct
-
-
 ```
 
 ## What is mean total number of steps taken per day?
@@ -59,23 +53,30 @@ Make a histogram of the total number of steps taken each day
 Calculate and report the mean and median of the total number of steps taken per day
 
 
-```{r}
 
+```r
 #Calculate the total number of steps taken per day
 dailysteps <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TRUE) 
 names(dailysteps) <- c("Date", "steps")
 
 #Make a histogram of the total number of steps taken each day
 qplot(steps, data = dailysteps, geom="histogram", xlab = "Daily Number of Steps")
+```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 #Calculate and report the mean and median of the total number of steps taken per day
 mean.steps <- mean(dailysteps$steps) 
 median.steps <- median(dailysteps$steps)
-
 ```
 
-The mean number of steps each day is `r format(round(mean.steps), scientific=FALSE)`  
-The median number of steps each day is `r format(median.steps, scientific=FALSE)`  
+The mean number of steps each day is 9354  
+The median number of steps each day is 10395  
 
 #What is the average daily activity pattern?
 
@@ -83,7 +84,8 @@ Make a time series plot of the 5-minute interval (x-axis) and the average number
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r}
+
+```r
 #df of the mean and median number of steps taken, averaged across all days (y-axis)
 intsteps <- aggregate(activity$steps, by = list(activity$interval), mean, na.rm=TRUE)
 intstepsmed <- aggregate(activity$steps, by = list(activity$interval), median, na.rm=TRUE)
@@ -97,11 +99,14 @@ intsteps$median.steps <- round(intsteps$median.steps)
 
 
 ggplot(intsteps, aes(x = interval, y = mean.steps)) + geom_line()
-
-most.steps <- intsteps$interval[intsteps$mean.steps == max(intsteps$mean.steps)]
-
 ```
-The interval with the most steps each day (on average is) : `r most.steps`
+
+![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+most.steps <- intsteps$interval[intsteps$mean.steps == max(intsteps$mean.steps)]
+```
+The interval with the most steps each day (on average is) : 835
  
 #Imputing missing values
 
@@ -115,7 +120,8 @@ Create a new dataset that is equal to the original dataset but with the missing 
 
 Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
 
-```{r}
+
+```r
 #find the NAs
 na.steps <- subset(activity, is.na(steps))
 num.NAs <-length(na.steps$steps)
@@ -136,16 +142,22 @@ dailysteps2 <- aggregate(activity$steps, by = list(activity$date), sum, na.rm=TR
 names(dailysteps2) <- c("Date", "steps")
 
 qplot(steps, data = dailysteps2, geom="histogram", xlab = "Daily Number of Steps")
-
-mean.steps2 <- mean(dailysteps2$steps) # 
-median.steps2 <- median(dailysteps2$steps)
-
-
 ```
 
-There are `r num.NAs` intervals with NA
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
 
-THe new mean number of steps is `r format(round(mean.steps2), scientific=FALSE)` this is close to the mean from the data with NAs of `r format(round(mean.steps), scientific=FALSE)`.  THe new median number of steps is `r format(round(median.steps2), scientific=FALSE)` this is the same as the median from the data with NAs of `r format(round(median.steps), scientific=FALSE)`. There is little impact to the estimated number of steps a day from using the median for the time interval.  I had previously used the mean but this introduced a sizeable difference.
+![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+mean.steps2 <- mean(dailysteps2$steps) # 
+median.steps2 <- median(dailysteps2$steps)
+```
+
+There are 2304 intervals with NA
+
+THe new mean number of steps is 9504 this is close to the mean from the data with NAs of 9354.  THe new median number of steps is 10395 this is the same as the median from the data with NAs of 10395. There is little impact to the estimated number of steps a day from using the median for the time interval.  I had previously used the mean but this introduced a sizeable difference.
 
 #Are there differences in activity patterns between weekdays and weekends?
 
@@ -154,8 +166,8 @@ Create a new factor variable in the dataset with two levels – “weekday” an
 Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
 
-```{r}
 
+```r
 # Add the Weekday/weekend identifier
 
 activity$week <- ifelse(weekdays(activity$date) == "Saturday" | weekdays(activity$date) == "Sunday" ,"weekend","weekday")
@@ -173,7 +185,8 @@ intsteps2$median.steps <- round(intsteps2$median.steps)
 
 
 ggplot(intsteps2, aes(x = interval, y = mean.steps))  + geom_line() + facet_grid(weekday~.)
-
 ```
+
+![](RepData_PeerAssessment1_files/figure-html/unnamed-chunk-5-1.png) 
 
 
